@@ -2,18 +2,14 @@
 require 'spec_helper'
 require 'net/http'
 
-describe 'Ansible provisioning', :deploy do
+describe 'Ansible provisioning' do
   before(:all) do
-    system("cd #{Rails.root} && rake vagrant:up")
-    system("cd #{Rails.root.join('deploy')} && ansible-playbook -v -i hosts.testing site.yml")
-
-    WebMock.allow_net_connect!
+    system('rake up')
+    system('cd deploy && ansible-playbook -v -i hosts.testing site.yml')
   end
 
   after(:all) do
-    WebMock.disable_net_connect!
-
-    system("cd #{Rails.root} && rake vagrant:down")
+    system('rake down')
   end
 
   describe 'common role' do
@@ -39,12 +35,12 @@ describe 'Ansible provisioning', :deploy do
       end
 
       it 'creates the database password file' do
-        file_path = Rails.root.join('deploy', 'roles', 'db', 'files', 'db_192.168.111.222_pass')
+        file_path = './deploy/roles/db/files/db_192.168.111.222_pass'
         expect(File.exist?(file_path)).to be_true
       end
 
       it 'creates the database and user' do
-        file_path = Rails.root.join('deploy', 'roles', 'db', 'files', 'db_192.168.111.222_pass')
+        file_path = './deploy/roles/db/files/db_192.168.111.222_pass'
         db_password = IO.read(file_path)
         db_password.gsub!('\\', '\\\\')
         db_password.gsub!(':', '\:')
@@ -79,12 +75,12 @@ describe 'Ansible provisioning', :deploy do
       end
 
       it 'creates the Tomcat password file' do
-        file_path = Rails.root.join('deploy', 'roles', 'solr', 'files', 'tomcat_192.168.111.222_pass')
+        file_path = './deploy/roles/solr/files/tomcat_192.168.111.222_pass'
         expect(File.exist?(file_path)).to be_true
       end
 
       it 'configures the Tomcat administration GUI' do
-        file_path = Rails.root.join('deploy', 'roles', 'solr', 'files', 'tomcat_192.168.111.222_pass')
+        file_path = './deploy/roles/solr/files/tomcat_192.168.111.222_pass'
         tomcat_password = IO.read(file_path).sub("\n", '')
 
         expect(vagrant_ssh("wget -q -O- http://rletters_tomcat:#{tomcat_password}@localhost:8080/manager/html")).to include('<title>/manager</title>')
@@ -156,14 +152,6 @@ describe 'Ansible provisioning', :deploy do
         expect(vagrant_ssh('sudo cat /opt/rletters/root/config/database.yml')).to include("host: '127.0.0.1'")
       end
 
-      it 'creates the secret tokens' do
-        expect(vagrant_ssh('sudo ls /opt/rletters/state/secret_token.rb')).to eq("/opt/rletters/state/secret_token.rb\n")
-      end
-
-      it 'replaces the secret tokens' do
-        expect(vagrant_ssh('sudo cat /opt/rletters/root/config/initializers/secret_token.rb')).to include('Randomly generated')
-      end
-
       it 'creates the Unicorn configuration' do
         expect(vagrant_ssh('sudo ls /opt/rletters/root/config/unicorn.rb')).to eq("/opt/rletters/root/config/unicorn.rb\n")
       end
@@ -179,30 +167,26 @@ describe 'Ansible provisioning', :deploy do
       end
 
       it 'serves the index page remotely' do
-        VCR.turned_off do
-          Net::HTTP.start('192.168.111.222', 80) do |http|
-            request = Net::HTTP::Get.new(URI('http://182.168.111.222/'))
-            response = http.request request
+        Net::HTTP.start('192.168.111.222', 80) do |http|
+          request = Net::HTTP::Get.new(URI('http://182.168.111.222/'))
+          response = http.request request
 
-            expect(response.body).to include('<!DOCTYPE html>')
-            expect {
-              response.value
-            }.to_not raise_error
-          end
+          expect(response.body).to include('<!DOCTYPE html>')
+          expect {
+            response.value
+          }.to_not raise_error
         end
       end
 
       it 'serves one of the application pages remotely' do
-        VCR.turned_off do
-          Net::HTTP.start('192.168.111.222', 80) do |http|
-            request = Net::HTTP::Get.new(URI('http://182.168.111.222/search/'))
-            response = http.request request
+        Net::HTTP.start('192.168.111.222', 80) do |http|
+          request = Net::HTTP::Get.new(URI('http://182.168.111.222/search/'))
+          response = http.request request
 
-            expect(response.body).to include('<!DOCTYPE html>')
-            expect {
-              response.value
-            }.to_not raise_error
-          end
+          expect(response.body).to include('<!DOCTYPE html>')
+          expect {
+            response.value
+          }.to_not raise_error
         end
       end
     end
