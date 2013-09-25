@@ -2,6 +2,9 @@
 require 'rubygems'
 require 'rspec/autorun'
 require 'fileutils'
+require 'vagrant-wrapper'
+
+VagrantWrapper.require_or_help_install('>= 1.2')
 
 Dir['./spec/support/**/*.rb'].each { |f| require f }
 

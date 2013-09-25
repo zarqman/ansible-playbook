@@ -50,7 +50,7 @@ describe 'Ansible provisioning' do
         vagrant_ssh('chmod 0600 ~/.pgpass')
 
         # Make sure the database exists and the user can connect
-        expect(vagrant_ssh('psql -h 127.0.0.1 -d rletters_production -U rletters_postgresql -c \\\\\\\\list')).to match(/ rletters_production /)
+        expect(vagrant_ssh('psql -h 127.0.0.1 -d rletters_production -U rletters_postgresql -c \\\\list')).to match(/ rletters_production /)
 
         # Clean up the authentication file
         vagrant_ssh('rm ~/.pgpass')
@@ -150,6 +150,10 @@ describe 'Ansible provisioning' do
 
       it 'creates the database.yml file pointing at localhost' do
         expect(vagrant_ssh('sudo cat /opt/rletters/root/config/database.yml')).to include("host: '127.0.0.1'")
+      end
+
+      it 'gets the NLP pacakge' do
+        expect(vagrant_ssh('sudo ls /opt/rletters/root/vendor/nlp/stanford-corenlp.jar')).to eq("/opt/rletters/root/vendor/nlp/stanford-corenlp.jar\n")
       end
 
       it 'creates the Unicorn configuration' do

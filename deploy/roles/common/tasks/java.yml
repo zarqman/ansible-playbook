@@ -1,0 +1,22 @@
+---
+# Install Java 1.7.  It's needed for both Tomcat/Solr and the web hosts, so
+# just get it working everywhere.
+
+- name: Install Java 1.7
+  yum: name={{ item }} state=present
+  with_items:
+    - java-1.7.0-openjdk
+    - java-1.7.0-openjdk-devel
+  tags: java
+
+- name: Install profile snippet to set JAVA_HOME
+  copy: src=java.sh dest=/etc/profile.d/java.sh
+  tags: java
+
+- name: Permit JAVA_HOME for root in sudo environment
+  lineinfile: dest=/etc/sudoers state=present regexp="^Defaults\s+env_keep.+JAVA_HOME" line="Defaults env_keep += \"JAVA_HOME\""
+  tags: java
+
+- name: Permit LD_LIBRARY_PATH for root in sudo environment
+  lineinfile: dest=/etc/sudoers state=present regexp="^Defaults\s+env_keep.+LD_LIBRARY_PATH" line="Defaults env_keep += \"LD_LIBRARY_PATH\""
+  tags: java

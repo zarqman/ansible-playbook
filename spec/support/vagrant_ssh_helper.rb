@@ -4,7 +4,7 @@ require 'timeout'
 
 module VagrantSshHelper
   def vagrant_ssh(str)
-    `vagrant ssh -c "#{str}"`
+    VagrantWrapper.new.get_output(['ssh', '-c', str])
   end
 
   def vagrant_check_port_open(port)

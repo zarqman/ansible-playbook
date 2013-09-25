@@ -22,16 +22,16 @@
   roles:
     - solr
 
-- name: confgure and deploy the web servers
-  hosts: webservers
-  sudo: yes
-
-  roles:
-    - web
-
 - name: configure and deploy the Redis server
   hosts: redisserver
   sudo: yes
 
   roles:
     - redis
+
+- name: confgure and deploy the web servers
+  hosts: webservers
+  sudo: yes
+
+  roles:
+    - web

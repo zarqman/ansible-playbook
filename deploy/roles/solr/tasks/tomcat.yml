@@ -1,10 +1,6 @@
 ---
 # Download Tomcat and Solr, installing them in /opt/
 
-- name: Install Java 1.7
-  yum: name=java-1.7.0-openjdk state=present
-  tags: tomcat
-
 - name: Download Tomcat
   get_url: url={{ tomcat_url }} dest=/tmp/{{ tomcat_filename }}.tar.gz
   tags: tomcat
