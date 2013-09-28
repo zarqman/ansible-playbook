@@ -1,0 +1,57 @@
+---
+# Install and configure Bluepill to monitor our daemons
+
+- name: Install production gems
+  gem: name=bluepill state=present user_install=no
+  with_items:
+    - bluepill
+    - resque-pool
+    - unicorn
+  tags: bluepill
+
+- name: Create Bluepill run directory
+  file: path=/var/run/bluepill state=directory
+  tags: bluepill
+
+- name: Create Bluepill log configuration
+  lineinfile: dest=/etc/rsyslog.conf regexp='^local6' line='local6.*    /var/log/bluepill.log' state=present
+  notify: restart rsyslogd
+  tags: bluepill
+
+- name: Create Bluepill log rotation configuration
+  lineinfile: dest=/etc/logrotate.d/syslog regexp='^/var/log/bluepill\.log' line='/var/log/bluepill.log' state=present insertbefore=BOF
+  tags: bluepill
+
+- name: Install Bluepill init script
+  copy: src=bluepill-initscript.sh dest=/etc/init.d/bluepill mode=0755
+  tags: bluepill
+
+- name: Create Bluepill configuration directory
+  file: path=/opt/bluepill state=directory
+  tags: bluepill
+
+- name: Install Bluepill configuration
+  copy: src=bluepill-config.rb dest=/opt/bluepill/bluepill.rb
+  tags: bluepill
+
+- name: Create resque-pool configuration
+  template: src=resque-pool.yml.j2 dest=/opt/bluepill/resque-pool.yml
+  tags: bluepill
+
+- name: Create Unicorn configuration
+  copy: src=unicorn.rb dest=/opt/bluepill/unicorn.rb
+  tags: bluepill
+
+- name: Make sure Bluepill is started
+  service: name=bluepill state=started enabled=yes
+  register: bluepill_start
+  tags: bluepill
+
+- name: Reload Bluepill if needed
+  service: name=bluepill state=reloaded
+  when: not bluepill_start.changed
+  tags: bluepill
+
+- name: Wait for Bluepill to bring up the Unicorns
+  script: bluepill-wait.sh
+  tags: bluepill

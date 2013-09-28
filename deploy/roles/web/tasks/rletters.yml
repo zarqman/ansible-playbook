@@ -1,29 +1,11 @@
 ---
 # Copy and deploy the application code
 
-- name: Install Bluepill
-  gem: name=bluepill state=present user_install=no
-  tags: rletters
-
-- name: Create Bluepill run directory
-  file: path=/var/run/bluepill state=directory
-  tags: rletters
-
-- name: Create Bluepill log configuration
-  lineinfile: dest=/etc/rsyslog.conf regexp='^local6' line='local6.*    /var/log/bluepill.log' state=present
-  notify: restart rsyslogd
-  tags: rletters
-
-- name: Create Bluepill log rotation configuration
-  lineinfile: dest=/etc/logrotate.d/syslog regexp='^/var/log/bluepill\.log' line='/var/log/bluepill.log' state=present insertbefore=BOF
-  tags: rletters
-
-- name: Install Bluepill init script
-  copy: src=bluepill-initscript.sh dest=/etc/init.d/bluepill mode=0755
-  tags: rletters
-
-- name: Install NodeJS as an ExecJS runtime
-  yum: name=nodejs state=present
+- name: Install code dependencies
+  yum: name={{ item }} state=present
+  with_items:
+    - nodejs
+    - git
   tags: rletters
 
 - name: Create RLetters directory
@@ -32,10 +14,6 @@
 
 - name: Create RLetters state directory
   file: path=/opt/rletters/state state=directory
-  tags: rletters
-
-- name: Install git
-  yum: name=git state=present
   tags: rletters
 
 - name: Check out RLetters via git
@@ -62,10 +40,6 @@
   file: src=/opt/rletters/state/database.yml path=/opt/rletters/root/config/database.yml state=link
   tags: rletters
 
-- name: Create resque-pool configuration
-  template: src=resque-pool.yml.j2 dest=/opt/rletters/state/resque-pool.yml
-  tags: rletters
-
 - name: Set Java environment JAVA_HOME configuration
   lineinfile: dest=/opt/rletters/root/config/initializers/01_java_bridge.rb regexp="^#?ENV\['JAVA_HOME'\]\s*=" line="ENV['JAVA_HOME'] = '/usr/lib/jvm/java'" state=present
   tags: rletters
@@ -88,14 +62,6 @@
 
 - name: Unzip the Stanford NLP package
   command: chdir=/opt/rletters/root/vendor/nlp/ unzip /tmp/stanford-core-nlp-full.zip creates=/opt/rletters/root/vendor/nlp/stanford-corenlp.jar
-  tags: rletters
-
-- name: Create the Unicorn configuration
-  copy: src=unicorn.rb dest=/opt/rletters/state/unicorn.rb
-  tags: rletters
-
-- name: Symlink the Unicorn configuration
-  file: src=/opt/rletters/state/unicorn.rb path=/opt/rletters/root/config/unicorn.rb state=link
   tags: rletters
 
 # This shouldn't cause damage, but we don't put the rletters tag on it, just to
@@ -128,18 +94,4 @@
 - name: Set the setting to point RLetters at the external Solr server
   command: chdir=/opt/rletters/root bundle exec rake setting:set[solr_server_url,{{ hostvars[groups['solrserver'][0]]['ansible_eth0']['ipv4']['address'] }}] RAILS_ENV=production
   when: inventory_hostname != groups['solrserver'][0]
-  tags: rletters
-
-- name: Make sure Bluepill is started
-  service: name=bluepill state=started enabled=yes
-  register: bluepill_start
-  tags: rletters
-
-- name: Reload Bluepill if needed
-  service: name=bluepill state=reloaded
-  when: not bluepill_start.changed
-  tags: rletters
-
-- name: Wait for Bluepill to bring up the Unicorns
-  script: bluepill-wait.sh
   tags: rletters

@@ -13,7 +13,7 @@
 # All our Ruby scripts are in /usr/local/bin; put that in the PATH
 export PATH=/usr/local/bin:$PATH
 BLUEPILL_BIN=/usr/local/bin/bluepill
-BLUEPILL_CONFIG=/opt/rletters/root/config/bluepill.rb
+BLUEPILL_CONFIG=/opt/bluepill/bluepill.rb
 
 PIDFILE=/var/run/bluepill/pids/rletters.pid
 
