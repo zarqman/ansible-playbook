@@ -1,0 +1,9 @@
+{% if maintenance_workers|int > 0 %}
+maintenance: {{ maintenance_workers }}
+{% endif %}
+{% if ui_workers|int > 0 %}
+ui: {{ ui_workers }}
+{% endif %}
+{% if analysis_workers|int > 0 %}
+analysis: {{ analysis_workers }}
+{% endif %}

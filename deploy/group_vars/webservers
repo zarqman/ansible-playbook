@@ -6,3 +6,10 @@
 ruby_url: https://ftp.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p247.tar.gz
 ruby_filename: ruby-2.0.0-p247
 ruby_version: ruby 2.0.0p247
+
+# Default configuration for every web instance is to run one worker on each
+# of the Resque queues.  Note that you *must* run one worker on each queue
+# somewhere, or the application will not work.
+maintenance_workers: 1
+ui_workers: 1
+analysis_workers: 1

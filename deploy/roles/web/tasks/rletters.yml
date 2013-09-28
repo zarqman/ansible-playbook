@@ -62,8 +62,16 @@
   file: src=/opt/rletters/state/database.yml path=/opt/rletters/root/config/database.yml state=link
   tags: rletters
 
-- name: Create Java environment configuration file
-  copy: src=00_java_environment.rb dest=/opt/rletters/root/config/initializers/00_java_environment.rb
+- name: Create resque-pool configuration
+  template: src=resque-pool.yml.j2 dest=/opt/rletters/state/resque-pool.yml
+  tags: rletters
+
+- name: Set Java environment JAVA_HOME configuration
+  lineinfile: dest=/opt/rletters/root/config/initializers/01_java_bridge.rb regexp="^#?ENV\['JAVA_HOME'\]\s*=" line="ENV['JAVA_HOME'] = '/usr/lib/jvm/java'" state=present
+  tags: rletters
+
+- name: Set Java environment LD_LIBRARY_PATH configuration
+  lineinfile: dest=/opt/rletters/root/config/initializers/01_java_bridge.rb regexp="^#?ENV\['LD_LIBRARY_PATH'\]\s*=" line="ENV['LD_LIBRARY_PATH'] = '/usr/lib/jvm/java/jre/lib/amd64:/usr/lib/jvm/java/jre/lib/amd64/client'" state=present
   tags: rletters
 
 - name: Create the sockets directory
