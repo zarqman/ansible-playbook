@@ -3,4 +3,5 @@ deploy/hosts
 deploy/roles/db/files/*_pass
 deploy/roles/solr/files/*_pass
 deploy/roles/web/files/*_pass
-
+downloads/*
+!downloads/.gitkeep

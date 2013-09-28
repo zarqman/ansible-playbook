@@ -53,7 +53,7 @@
   tags: rletters
 
 - name: Fetch the Stanford NLP package
-  get_url: url=http://louismullie.com/treat/stanford-core-nlp-full.zip dest=/tmp/stanford-core-nlp-full.zip
+  get_url: url=http://louismullie.com/treat/stanford-core-nlp-full.zip dest=/opt/downloads/stanford-core-nlp-full.zip
   tags: rletters
 
 - name: Install unzip
@@ -61,7 +61,7 @@
   tags: rletters
 
 - name: Unzip the Stanford NLP package
-  command: chdir=/opt/rletters/root/vendor/nlp/ unzip /tmp/stanford-core-nlp-full.zip creates=/opt/rletters/root/vendor/nlp/stanford-corenlp.jar
+  command: chdir=/opt/rletters/root/vendor/nlp/ unzip /opt/downloads/stanford-core-nlp-full.zip creates=/opt/rletters/root/vendor/nlp/stanford-corenlp.jar
   tags: rletters
 
 # This shouldn't cause damage, but we don't put the rletters tag on it, just to

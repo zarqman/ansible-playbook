@@ -23,11 +23,11 @@
   tags: ruby
 
 - name: Download Ruby
-  get_url: url={{ ruby_url }} dest=/tmp/ruby-build/{{ ruby_filename }}.tar.gz
+  get_url: url={{ ruby_url }} dest=/opt/downloads/ruby-build/{{ ruby_filename }}.tar.gz
   tags: ruby
 
 - name: Extract Ruby
-  command: tar -xf {{ ruby_filename }}.tar.gz chdir=/tmp/ruby-build creates=/tmp/ruby-build/{{ ruby_filename }}
+  command: tar -xf /opt/downloads/{{ ruby_filename }}.tar.gz chdir=/tmp/ruby-build creates=/tmp/ruby-build/{{ ruby_filename }}
   tags: ruby
 
 - name: Configure Ruby

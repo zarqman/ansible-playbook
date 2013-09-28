@@ -15,7 +15,7 @@ listen "#{APP_PATH}/tmp/sockets/unicorn.sock", :backlog => 64
 timeout 30
 
 # Feel free to point this anywhere accessible on the filesystem.
-pid "#{APP_PATH}/tmp/pids/unicorn.pid"
+pid "/opt/bluepill/unicorn.pid"
 
 # By default, the Unicorn logger will write to stderr.
 # Additionally, ome applications/frameworks log to stderr or stdout,

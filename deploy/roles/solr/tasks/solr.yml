@@ -2,11 +2,11 @@
 # Install the Solr package from the Apache website
 
 - name: Download Solr
-  get_url: url={{ solr_url }} dest=/tmp/{{ solr_filename }}.tar.gz
+  get_url: url={{ solr_url }} dest=/opt/downloads/{{ solr_filename }}.tar.gz
   tags: solr
 
 - name: Extract Solr archive
-  command: chdir=/opt tar xvf /tmp/{{ solr_filename }}.tar.gz -C /opt creates=/opt/{{ solr_filename }}
+  command: chdir=/opt tar xvf /opt/downloads/{{ solr_filename }}.tar.gz -C /opt creates=/opt/{{ solr_filename }}
   tags: solr
 
 - name: Create symlink for Solr

@@ -2,11 +2,11 @@
 # Download Tomcat and Solr, installing them in /opt/
 
 - name: Download Tomcat
-  get_url: url={{ tomcat_url }} dest=/tmp/{{ tomcat_filename }}.tar.gz
+  get_url: url={{ tomcat_url }} dest=/opt/downloads/{{ tomcat_filename }}.tar.gz
   tags: tomcat
 
 - name: Extract Tomcat archive
-  command: chdir=/opt tar xvf /tmp/{{ tomcat_filename }}.tar.gz -C /opt creates=/opt/tomcat
+  command: chdir=/opt tar xvf /opt/downloads/{{ tomcat_filename }}.tar.gz -C /opt creates=/opt/tomcat
   tags: tomcat
 
 - name: Create symlink for Tomcat
