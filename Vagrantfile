@@ -18,4 +18,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.synced_folder "downloads", "/opt/downloads"
+  config.vm.synced_folder "yum-cache", "/var/cache/yum"
 end

@@ -8,7 +8,7 @@ Bluepill.application('rletters') do |app|
   app.uid = app.gid = 'rletters_deploy'
 
   app.process('unicorn') do |proc|
-    proc.start_command = 'unicorn -c /opt/bluepill/unicorn.rb -E production -D'
+    proc.start_command = 'bundle exec unicorn -c /opt/bluepill/unicorn.rb -E production -D'
     proc.stop_command = 'kill -QUIT {{PID}}'
     proc.restart_command = 'kill -USR2 {{PID}}'
 
@@ -28,8 +28,9 @@ Bluepill.application('rletters') do |app|
   end
 
   app.process('resque-scheduler') do |proc|
-    proc.start_command = 'RAILS_ENV=production bundle exec rake resque:scheduler'
+    proc.start_command = 'bundle exec rake RAILS_ENV=production resque:scheduler'
     proc.stop_command = 'kill -QUIT {{PID}}'
+    proc.stdout = proc.stderr = '/opt/rletters/root/log/resque-scheduler.log'
 
     proc.pid_file = '/opt/bluepill/resque-scheduler.pid'
     proc.daemonize = true
@@ -41,7 +42,7 @@ Bluepill.application('rletters') do |app|
   end
 
   app.process('resque-pool') do |proc|
-    proc.start_command = 'resque-pool --config /opt/bluepill/resque-pool.yml --daemon --environment production'
+    proc.start_command = 'bundle exec resque-pool --config /opt/bluepill/resque-pool.yml --daemon --environment production --pidfile /opt/bluepill/resque-pool.pid'
     proc.stop_command = 'kill -QUIT {{PID}}'
     proc.restart_command = 'kill -HUP {{PID}}'
 

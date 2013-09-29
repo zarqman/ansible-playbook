@@ -136,10 +136,6 @@ describe 'Ansible provisioning' do
     end
 
     describe 'rletters.yml' do
-      it 'installs Bluepill globally' do
-        expect(vagrant_ssh('which bluepill')).to eq("/usr/local/bin/bluepill\n")
-      end
-
       it 'checks out RLetters' do
         expect(vagrant_ssh('sudo ls /opt/rletters/root/Gemfile')).to eq("/opt/rletters/root/Gemfile\n")
       end
@@ -155,9 +151,23 @@ describe 'Ansible provisioning' do
       it 'gets the NLP pacakge' do
         expect(vagrant_ssh('sudo ls /opt/rletters/root/vendor/nlp/stanford-corenlp.jar')).to eq("/opt/rletters/root/vendor/nlp/stanford-corenlp.jar\n")
       end
+    end
+
+    describe 'bluepill.yml' do
+      it 'installs Bluepill globally' do
+        expect(vagrant_ssh('which bluepill')).to eq("/usr/local/bin/bluepill\n")
+      end
+
+      it 'creates the Bluepill configuration' do
+        expect(vagrant_ssh('sudo ls /opt/bluepill/bluepill.rb')).to eq("/opt/bluepill/bluepill.rb\n")
+      end
+
+      it 'creates the resque-pool configuration' do
+        expect(vagrant_ssh('sudo ls /opt/bluepill/resque-pool.yml')).to eq("/opt/bluepill/resque-pool.yml\n")
+      end
 
       it 'creates the Unicorn configuration' do
-        expect(vagrant_ssh('sudo ls /opt/rletters/root/config/unicorn.rb')).to eq("/opt/rletters/root/config/unicorn.rb\n")
+        expect(vagrant_ssh('sudo ls /opt/bluepill/unicorn.rb')).to eq("/opt/bluepill/unicorn.rb\n")
       end
     end
 

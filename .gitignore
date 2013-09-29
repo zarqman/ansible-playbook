@@ -5,3 +5,5 @@ deploy/roles/solr/files/*_pass
 deploy/roles/web/files/*_pass
 downloads/*
 !downloads/.gitkeep
+yum-cache/*
+!yum-cache/.gitkeep

@@ -1,12 +1,8 @@
 ---
 # Install and configure Bluepill to monitor our daemons
 
-- name: Install production gems
+- name: Install Bluepill
   gem: name=bluepill state=present user_install=no
-  with_items:
-    - bluepill
-    - resque-pool
-    - unicorn
   tags: bluepill
 
 - name: Create Bluepill run directory
@@ -40,6 +36,10 @@
 
 - name: Create Unicorn configuration
   copy: src=unicorn.rb dest=/opt/bluepill/unicorn.rb
+  tags: bluepill
+
+- name: Set the ownership for the Bluepill directory
+  file: path=/opt/bluepill owner=rletters_deploy group=rletters_deploy state=directory recurse=yes
   tags: bluepill
 
 - name: Make sure Bluepill is started

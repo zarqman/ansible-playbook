@@ -15,3 +15,7 @@
 - name: Copy the PostgreSQL GPG key
   copy: src=RPM-GPG-KEY-PGDG-92 dest=/etc/pki/rpm-gpg
   tags: yum
+
+- name: Enable the yum cache
+  lineinfile: dest=/etc/yum.conf regexp="^keepcache=" line="keepcache=1" state=present
+  tags: yum
