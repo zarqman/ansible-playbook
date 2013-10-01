@@ -6,7 +6,7 @@
   tags: solr
 
 - name: Extract Solr archive
-  command: chdir=/opt tar xvf /opt/downloads/{{ solr_filename }}.tar.gz -C /opt creates=/opt/{{ solr_filename }}
+  command: chdir=/opt tar xvf /opt/downloads/{{ solr_filename }}.tar.gz -C /opt creates=/opt/{{ solr_filename }}/README.txt
   tags: solr
 
 - name: Create symlink for Solr
