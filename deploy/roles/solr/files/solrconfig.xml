@@ -70,6 +70,15 @@
      </autoSoftCommit>
   </updateHandler>
 
+  <!-- This saves massive amounts of memory, with very little degradation in
+       response time; see
+       http://www.hathitrust.org/blogs/large-scale-search/too-many-words-again
+  -->
+  <indexReaderFactory name="IndexReaderFactory"
+                      class="solr.StandardIndexReaderFactory">
+    <int name="setTermIndexDivisor">16</int>
+  </indexReaderFactory>
+
   <query>
     <maxBooleanClauses>1024</maxBooleanClauses>
 
