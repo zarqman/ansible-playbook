@@ -50,10 +50,6 @@
   user: name=tomcat group=tomcat home=/opt/tomcat
   tags: tomcat
 
-- name: Change ownership of Tomcat installation
-  file: path=/opt/{{ tomcat_filename }} owner=tomcat group=tomcat state=directory recurse=yes
-  tags: tomcat
-
 - name: Create Tomcat server configuration
   copy: src=server.xml dest=/opt/tomcat/conf/server.xml
   notify: restart tomcat
@@ -62,6 +58,10 @@
 - name: Create Tomcat user configuration
   template: src=tomcat-users.xml.j2 dest=/opt/tomcat/conf/tomcat-users.xml
   notify: restart tomcat
+  tags: tomcat
+
+- name: Change ownership of Tomcat installation
+  file: path=/opt/{{ tomcat_filename }} owner=tomcat group=tomcat state=directory recurse=yes
   tags: tomcat
 
 - name: Install Tomcat init script
