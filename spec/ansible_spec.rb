@@ -66,6 +66,14 @@ describe 'Ansible provisioning' do
 
   describe 'solr role' do
     describe 'tomcat.yml' do
+      it 'installs the Tomcat native library' do
+        expect(vagrant_ssh('ls /usr/lib64/libtcnative-1.so')).to eq("/usr/lib64/libtcnative-1.so\n")
+      end
+
+      it 'actually uses the Tomcat native library' do
+        expect(vagrant_ssh('grep "Loaded APR based" /opt/tomcat/logs/catalina.out')).to_not be_empty
+      end
+
       it 'starts the Tomcat server' do
         expect(vagrant_ssh('/etc/init.d/tomcat status')).to include('Tomcat is running')
       end
@@ -194,7 +202,7 @@ describe 'Ansible provisioning' do
 
       it 'serves one of the application pages remotely' do
         Net::HTTP.start('192.168.111.222', 80) do |http|
-          request = Net::HTTP::Get.new(URI('http://182.168.111.222/search/'))
+          request = Net::HTTP::Get.new(URI('http://192.168.111.222/search/'))
           response = http.request request
 
           expect(response.body).to include('<!DOCTYPE html>')

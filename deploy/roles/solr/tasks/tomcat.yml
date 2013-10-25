@@ -13,6 +13,35 @@
   file: src=/opt/{{ tomcat_filename }} path=/opt/tomcat state=link
   tags: tomcat
 
+- name: Install Tomcat native library dependencies
+  yum: name={{ item }} state=present
+  with_items:
+    - apr
+    - apr-devel
+    - apr-util
+    - apr-util-devel
+  tags: tomcat
+
+- name: Extract Tomcat native library
+  command: tar -xf tomcat-native.tar.gz chdir=/opt/tomcat/bin creates=/opt/tomcat/bin/tomcat-native-{{ tomcat_native_version }}-src/README.txt
+  tags: tomcat
+
+- name: Configure Tomcat native library
+  command: ./configure --with-apr=/usr chdir=/opt/tomcat/bin/tomcat-native-{{ tomcat_native_version }}-src/jni/native creates=/opt/tomcat/bin/tomcat-native-{{ tomcat_native_version }}-src/jni/native/Makefile
+  tags: tomcat
+
+- name: Build Tomcat native library
+  command: make chdir=/opt/tomcat/bin/tomcat-native-{{ tomcat_native_version }}-src/jni/native creates=/opt/tomcat/bin/tomcat-native-{{ tomcat_native_version }}-src/jni/native/.libs/libtcnative-1.a
+  tags: tomcat
+
+- name: Install Tomcat native library
+  command: make install chdir=/opt/tomcat/bin/tomcat-native-{{ tomcat_native_version }}-src/jni/native creates=/usr/local/apr/lib/libtcnative-1.so
+  tags: tomcat
+
+- name: Symlink Tomcat native library to global directory
+  file: src=/usr/local/apr/lib/libtcnative-1.so path=/usr/lib64/libtcnative-1.so state=link
+  tags: tomcat
+
 - name: Add group for Tomcat
   group: name=tomcat
   tags: tomcat
