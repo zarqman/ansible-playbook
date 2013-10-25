@@ -27,7 +27,7 @@
   tags: tomcat
 
 - name: Configure Tomcat native library
-  command: ./configure --with-apr=/usr chdir=/opt/tomcat/bin/tomcat-native-{{ tomcat_native_version }}-src/jni/native creates=/opt/tomcat/bin/tomcat-native-{{ tomcat_native_version }}-src/jni/native/Makefile
+  command: ./configure --with-apr=/usr --with-java-home=/usr/lib/jvm/java chdir=/opt/tomcat/bin/tomcat-native-{{ tomcat_native_version }}-src/jni/native creates=/opt/tomcat/bin/tomcat-native-{{ tomcat_native_version }}-src/jni/native/Makefile
   tags: tomcat
 
 - name: Build Tomcat native library
