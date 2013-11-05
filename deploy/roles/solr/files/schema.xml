@@ -22,65 +22,72 @@
  unless you are attempting to add more fields to documents.
 -->
 
-<schema name="rletters" version="1.5">
+<schema name="rletters-2.0" version="1.5">
 
- <fields>
-   <!-- Required by Solr internals in version 4 -->
-   <field name="_version_" type="long" indexed="true"  stored="true"/>
+  <fields>
+    <!-- Required by Solr internals in version 4 -->
+    <field name="_version_" type="long" indexed="true"  stored="true"/>
 
-   <!-- SHA-1 sum and DOI are stored verbatim -->
-   <field name="shasum" type="string" indexed="true" stored="true" required="true" omitNorms="true" />
-   <field name="doi" type="string" indexed="true" stored="true" omitNorms="true" />
+    <!-- UID and DOI are stored verbatim -->
+    <field name="uid" type="string" indexed="true" stored="true" required="true" omitNorms="true" />
+    <field name="doi" type="string" indexed="true" stored="true" omitNorms="true" />
 
-   <!-- The license type and URL are stored verbatim -->
-   <field name="license" type="string" indexed="true" stored="true" omitNorms="true" />
-   <field name="license_url" type="string" indexed="true" stored="true" omitNorms="true" />
+    <!-- The license type and URL are stored verbatim -->
+    <field name="license" type="string" indexed="true" stored="true" omitNorms="true" />
+    <field name="license_url" type="string" indexed="true" stored="true" omitNorms="true" />
 
-   <!-- The original bibliographic data: search it, but don't delete stopwords -->
-   <field name="authors" type="text_splitLower" indexed="true" stored="true" omitNorms="true" />
-   <field name="title" type="text_splitLower" indexed="true" stored="true" omitNorms="true" />
-   <field name="journal" type="text_splitLower" indexed="true" stored="true" omitNorms="true" />
-   <field name="year" type="text_splitLower" indexed="true" stored="true" omitNorms="true" />
-   <field name="volume" type="text_splitLower" indexed="true" stored="true" omitNorms="true" />
-   <field name="number" type="text_splitLower" indexed="true" stored="true" omitNorms="true" />
-   <field name="pages" type="text_pageNumber" indexed="true" stored="true" omitNorms="true" />
+    <!-- The original bibliographic data: search it, but don't delete
+         stopwords -->
+    <field name="authors" type="text_splitLower" indexed="true" stored="true" omitNorms="true" />
+    <field name="title" type="text_splitLower" indexed="true" stored="true" omitNorms="true" />
+    <field name="journal" type="text_splitLower" indexed="true" stored="true" omitNorms="true" />
+    <field name="year" type="text_splitLower" indexed="true" stored="true" omitNorms="true" />
+    <field name="volume" type="text_splitLower" indexed="true" stored="true" omitNorms="true" />
+    <field name="number" type="text_splitLower" indexed="true" stored="true" omitNorms="true" />
+    <field name="pages" type="text_pageNumber" indexed="true" stored="true" omitNorms="true" />
 
-   <!-- The original full text, for text analysis -->
-   <field name="fulltext" type="text_splitLower" indexed="true" stored="true" omitNorms="false" termVectors="true" termPositions="true" termOffsets="true" />
+    <!-- The original full text, for text analysis -->
+    <field name="fulltext" type="text_splitLower" indexed="true" stored="true" omitNorms="false" termVectors="true" termPositions="true" termOffsets="true" />
 
-   <!-- The full text for searching, with stop words removed -->
-   <field name="fulltext_search" type="text_splitLowerStop" indexed="true" stored="false" omitNorms="true" />
+    <!-- If we have to fetch full text from an HTTP server, then we store the
+         URL verbatim, and we have a *non*-stored field for term vectors. -->
+    <field name="fulltext_url" type="string" indexed="true" stored="true" omitNorms="true" />
+    <field name="fulltext_ns" type="text_splitLower" indexed="true" stored="false" omitNorms="false" termVectors="true" termPositions="true" termOffsets="true" />
 
-   <!-- These three fields can be searched with stemming enabled -->
-   <field name="title_stem" type="text_splitLowerStopStem" indexed="true" stored="false" omitNorms="true" />
-   <field name="journal_stem" type="text_splitLowerStopStem" indexed="true" stored="false" omitNorms="true" />
-   <field name="fulltext_stem" type="text_splitLowerStopStem" indexed="true" stored="false" omitNorms="false" />
+    <!-- The full text for searching, with stop words removed -->
+    <field name="fulltext_search" type="text_splitLowerStop" indexed="true" stored="false" omitNorms="true" multiValued="true" />
 
-   <!-- Faceting stores data in different formats (authors are tokenized by author,
-        journals aren't tokenized whatsoever) -->
-   <field name="authors_facet" type="text_commaDelimited" indexed="true" stored="false" omitNorms="true" />
-   <field name="journal_facet" type="text_noTokens" indexed="true" stored="false" omitNorms="true" />
+    <!-- These three fields can be searched with stemming enabled -->
+    <field name="title_stem" type="text_splitLowerStopStem" indexed="true" stored="false" omitNorms="true" />
+    <field name="journal_stem" type="text_splitLowerStopStem" indexed="true" stored="false" omitNorms="true" />
+    <field name="fulltext_stem" type="text_splitLowerStopStem" indexed="true" stored="false" omitNorms="false" />
 
-   <!-- Sorting requires fields that aren't tokenized at all -->
-   <field name="authors_sort" type="text_noTokens" indexed="true" stored="false" omitNorms="true" />
-   <field name="title_sort" type="text_noTokens" indexed="true" stored="false" omitNorms="true" />
-   <field name="journal_sort" type="text_noTokens" indexed="true" stored="false" omitNorms="true" />
-   <field name="year_sort" type="text_noTokens" indexed="true" stored="false" omitNorms="true" />
- </fields>
+    <!-- Faceting stores data in different formats (authors are tokenized by
+         author, journals aren't tokenized whatsoever) -->
+    <field name="authors_facet" type="text_commaDelimited" indexed="true" stored="false" omitNorms="true" />
+    <field name="journal_facet" type="text_noTokens" indexed="true" stored="false" omitNorms="true" />
+
+    <!-- Sorting requires fields that aren't tokenized at all -->
+    <field name="authors_sort" type="text_noTokens" indexed="true" stored="false" omitNorms="true" />
+    <field name="title_sort" type="text_noTokens" indexed="true" stored="false" omitNorms="true" />
+    <field name="journal_sort" type="text_noTokens" indexed="true" stored="false" omitNorms="true" />
+    <field name="year_sort" type="text_noTokens" indexed="true" stored="false" omitNorms="true" />
+  </fields>
 
   <!-- Field to use to determine and enforce document uniqueness.
        Unless this field is marked with required="false", it will be a
-       required field
-   -->
-  <uniqueKey>shasum</uniqueKey>
+       required field -->
+  <uniqueKey>uid</uniqueKey>
 
   <!-- Copy our _stem fields -->
   <copyField source="title" dest="title_stem"/>
   <copyField source="journal" dest="journal_stem"/>
   <copyField source="fulltext" dest="fulltext_stem"/>
+  <copyField source="fulltext_ns" dest="fulltext_stem"/>
 
-  <!-- Copy over the full text to the search field -->
+  <!-- Copy over the full texts to the search field -->
   <copyField source="fulltext" dest="fulltext_search"/>
+  <copyField source="fulltext_ns" dest="fulltext_search"/>
 
   <!-- Copy our facet fields -->
   <copyField source="authors" dest="authors_facet"/>
@@ -93,7 +100,7 @@
   <copyField source="year" dest="year_sort"/>
 
   <types>
-    <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
+    <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true" />
     <fieldType name="long" class="solr.TrieLongField" precisionStep="0" omitNorms="true" positionIncrementGap="0" />
 
     <!-- Don't even tokenize (for certain kinds of faceting) -->

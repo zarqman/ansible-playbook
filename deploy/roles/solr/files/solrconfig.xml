@@ -123,7 +123,7 @@
         <!-- We return all of the original fields, not the _search versions -->
         <!-- NOTE: This parameter should match the value of DEFAULT_FIELDS in
              lib/solr/connection.rb -->
-        <str name="fl">shasum,doi,license,license_url,authors,title,journal,year,volume,number,pages</str>
+        <str name="fl">shasum,doi,license,license_url,authors,title,journal,year,volume,number,pages,fulltext_url</str>
         <str name="defType">dismax</str>
         <str name="qf">
            title_stem^8.0 fulltext_stem^5.0 journal_stem
@@ -166,7 +166,7 @@
         <!-- Enable term vectors, against the full text, but don't switch them
              on by default. -->
         <bool name="tv">false</bool>
-        <str name="tv.fl">fulltext</str>
+        <str name="tv.fl">fulltext,fulltext_ns</str>
         <bool name="tv.tf">true</bool>
         <bool name="tv.df">true</bool>
         <bool name="tv.tf_idf">true</bool>
