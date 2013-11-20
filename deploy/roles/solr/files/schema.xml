@@ -63,7 +63,7 @@
     <!-- These three fields can be searched with stemming enabled -->
     <field name="title_stem" type="text_splitLowerStopStem" indexed="true" stored="false" omitNorms="true" />
     <field name="journal_stem" type="text_splitLowerStopStem" indexed="true" stored="false" omitNorms="true" />
-    <field name="fulltext_stem" type="text_splitLowerStopStem" indexed="true" stored="false" omitNorms="false" />
+    <field name="fulltext_stem" type="text_splitLowerStopStem" indexed="true" stored="false" omitNorms="false" multiValued="true" />
 
     <!-- Faceting stores data in different formats (authors are tokenized by
          author, journals aren't tokenized whatsoever) -->
