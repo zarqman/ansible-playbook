@@ -3,9 +3,9 @@
 # want to change any of these from their defaults, but they are available if
 # you would like.
 
-ruby_url: https://ftp.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p247.tar.gz
-ruby_filename: ruby-2.0.0-p247
-ruby_version: ruby 2.0.0p247
+ruby_url: http://cache.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p353.tar.gz
+ruby_filename: ruby-2.0.0-p353
+ruby_version: ruby 2.0.0p353
 
 # Default configuration for every web instance is to run one worker on each
 # of the Resque queues.  Note that you *must* run one worker on each queue
