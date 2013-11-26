@@ -27,17 +27,17 @@
   tags: ruby
 
 - name: Extract Ruby
-  command: tar -xf /opt/downloads/{{ ruby_filename }}.tar.gz chdir=/tmp/ruby-build creates=/tmp/ruby-build/{{ ruby_filename }}
+  command: tar -xf /opt/downloads/{{ ruby_filename }}.tar.gz chdir=/tmp/ruby-build
   tags: ruby
 
 - name: Configure Ruby
-  command: ./configure chdir=/tmp/ruby-build/{{ ruby_filename }} creates=/tmp/ruby-build/{{ ruby_filename }}/Makefile
+  command: ./configure chdir=/tmp/ruby-build/{{ ruby_filename }}
   tags: ruby
 
 - name: Compile Ruby
-  command: make chdir=/tmp/ruby-build/{{ ruby_filename }} creates=/tmp/ruby-build/{{ ruby_filename }}/ruby
+  command: make chdir=/tmp/ruby-build/{{ ruby_filename }}
   tags: ruby
 
 - name: Install Ruby to /usr/local/
-  command: make install chdir=/tmp/ruby-build/{{ ruby_filename }} creates=/usr/local/bin/ruby
+  command: make install chdir=/tmp/ruby-build/{{ ruby_filename }}
   tags: ruby
